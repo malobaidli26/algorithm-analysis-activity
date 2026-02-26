@@ -1,0 +1,59 @@
+import random
+import time
+import matplotlib.pyplot as plt
+
+# Bubble Sort
+def bubble_sort(arr):
+    arr = arr[:]  # copy
+    n = len(arr)
+
+    for i in range(n):
+        for j in range(0, n - i - 1):
+            if arr[j] > arr[j + 1]:
+                arr[j], arr[j + 1] = arr[j + 1], arr[j]
+    return arr
+
+# Quick Sort
+def quick_sort(arr):
+    if len(arr) <= 1:
+        return arr
+
+    pivot = arr[len(arr) // 2]
+    left = [x for x in arr if x < pivot]
+    mid = [x for x in arr if x == pivot]
+    right = [x for x in arr if x > pivot]
+
+    return quick_sort(left) + mid + quick_sort(right)
+
+# Measure time (simple)
+def measure_time(func, data):
+    start = time.perf_counter()
+    func(data)
+    end = time.perf_counter()
+    return end - start
+
+# Benchmark
+sizes = [100, 500, 900, 2000, 5000]
+bubble_times = []
+quick_times = []
+
+for n in sizes:
+    data = [random.randint(0, 1000000) for _ in range(n)]
+
+    bubble_times.append(measure_time(bubble_sort, data))
+    quick_times.append(measure_time(quick_sort, data))
+
+print("Sizes:", sizes)
+print("Bubble:", bubble_times)
+print("Quick:", quick_times)
+
+plt.plot(sizes, bubble_times, marker="o", label="Bubble Sort")
+plt.plot(sizes, quick_times, marker="o", label="Quick Sort")
+plt.xlabel("Input Size")
+plt.ylabel("Time (seconds)")
+plt.title("Sorting Performance")
+plt.legend()
+plt.grid(True)
+
+plt.savefig("sorting_performance.png")
+plt.show()
